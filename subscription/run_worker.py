@@ -1,26 +1,13 @@
 # @@@SNIPSTART run_worker
 import asyncio
-from dataclasses import dataclass
 from datetime import timedelta
 
-from temporalio import activity, workflow
+from temporalio import workflow
 from temporalio.client import Client
 from temporalio.worker import Worker
 
-
-@dataclass
-class ComposeEmail:
-    email: str
-    message: str
-    count: int = 0
-
-
-@activity.defn
-async def send_email(details: ComposeEmail) -> str:
-    print(
-        f"Sending email to {details.email} with message: {details.message}, count: {details.count}"
-    )
-    return "success"
+from subscription.shared_objects import ComposeEmail
+from subscription.activity_function import send_email
 
 
 @workflow.defn

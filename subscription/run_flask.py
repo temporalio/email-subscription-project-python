@@ -1,9 +1,9 @@
 # @@@SNIPSTART run_flask
-from typing import Any, Dict
 
 from flask import Flask, g, jsonify, request
-from run_worker import SendEmailWorkflow
 from temporalio.client import Client
+
+from subscription.run_worker import SendEmailWorkflow
 
 app = Flask(__name__)
 
@@ -16,7 +16,7 @@ async def get_client():
 
 @app.route("/subscribe/", methods=["POST"])
 async def start_subscription():
-    client = await get_client()
+    await get_client()
 
     await g.client.start_workflow(
         SendEmailWorkflow.run,
@@ -36,7 +36,7 @@ async def start_subscription():
 # GET
 @app.route("/get-details/", methods=["GET"])
 async def get_query():
-    client = await get_client()
+    await get_client()
     handle = g.client.get_workflow_handle(
         "send-email-activity",
     )
@@ -57,7 +57,7 @@ async def get_query():
 # patch or delete
 @app.route("/unsubscribe/", methods=["DELETE"])
 async def end_subscription():
-    client = await get_client()
+    await get_client()
     handle = g.client.get_workflow_handle(
         "send-email-activity",
     )
