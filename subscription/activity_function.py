@@ -1,6 +1,6 @@
 from temporalio import activity
 
-from subscription.shared_objects import ComposeEmail
+from subscription.shared_objects import ComposeEmail # noqa: F401
 
 
 @activity.defn

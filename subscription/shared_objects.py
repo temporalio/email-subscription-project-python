@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-
 @dataclass
 class ComposeEmail:
     email: str

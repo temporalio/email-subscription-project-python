@@ -7,9 +7,8 @@ from temporalio.worker import Worker
 from subscription.shared_objects import ComposeEmail
 from subscription.activity_function import send_email
 from subscription.run_worker import SendEmailWorkflow
-import logging
 
-logger = logging.getLogger(__name__)
+
 
 
 async def test_execute_workflow(client: Client):
@@ -32,8 +31,7 @@ async def test_execute_workflow(client: Client):
 @activity.defn(name="send_email")
 async def send_email_mocked(input: ComposeEmail) -> str:
     print(
-        f"Sending email to test@example.com with message: {input.message}, count: {input.count}"
-        
+        f"Sending email to {input.email} with message: {input.message}, count: {input.count}"
     )
     return "success"
 
