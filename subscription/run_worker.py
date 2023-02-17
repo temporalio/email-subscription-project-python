@@ -1,4 +1,4 @@
-# @@@SNIPSTART run_worker
+# @@@SNIPSTART email-subscription-project-python-run_worker
 import asyncio
 from datetime import timedelta
 
@@ -6,8 +6,8 @@ from temporalio import workflow
 from temporalio.client import Client
 from temporalio.worker import Worker
 
-from subscription.shared_objects import ComposeEmail
 from subscription.activity_function import send_email
+from subscription.shared_objects import ComposeEmail
 
 
 @workflow.defn

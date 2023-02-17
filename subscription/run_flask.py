@@ -1,4 +1,4 @@
-# @@@SNIPSTART run_flask
+# @@@SNIPSTART email-subscription-project-python-run_flask
 
 from flask import Flask, g, jsonify, request
 from temporalio.client import Client

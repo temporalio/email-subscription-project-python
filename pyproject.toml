@@ -37,7 +37,8 @@ dependencies = { pydantic = "^1.10.4" }
 [tool.poe.tasks]
 format = [{cmd = "ruff --fix ."}, {cmd = "black ."}, {cmd = "isort ."}]
 lint = [{cmd = "ruff check ."}, {cmd = "black --check ."}, {cmd = "isort --check-only ."}]
-test = "pytest"
+lint-types = [{cmd = "mypy ."}]
+test = "python -m pytest"
 
 
 [build-system]
@@ -68,4 +69,4 @@ ignore_errors = true
 
 [tool.ruff]
 select = ["E", "F"]
-line-length = 99
+line-length = 120
