@@ -1,4 +1,4 @@
-# email-subscription-project-python-shared_objects
+# @@@SNIPSTART email-subscription-project-python-shared_objects
 from dataclasses import dataclass
 
 
