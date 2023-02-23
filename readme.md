@@ -17,8 +17,8 @@ poetry install
 ## Run
 
 ```python
-poetry run python subscription.run_worker
-poetry run python subscription.run_flask
+poetry run python subscription/run_worker.py
+poetry run python subscription/run_flask.py
 ```
 
 ## Terminate
