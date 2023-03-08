@@ -1,4 +1,4 @@
-# email-subscription-project-python-test_run_worker
+# @@@SNIPSTART email-subscription-project-python-test_run_worker
 
 import uuid
 
