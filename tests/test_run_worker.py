@@ -14,7 +14,7 @@ from shared_objects import ComposeEmail
 
 @pytest.mark.asyncio
 async def test_execute_workflow():
-    task_queue_name = str(uuid.uuid4())
+    task_queue_name = "subscription"
     async with await WorkflowEnvironment.start_time_skipping() as env:
         async with Worker(
             env.client,
@@ -40,7 +40,7 @@ async def send_email_mocked(input: ComposeEmail) -> str:
 
 @pytest.mark.asyncio
 async def test_mock_activity():
-    task_queue_name = str(uuid.uuid4())
+    task_queue_name = "subscription"
     async with await WorkflowEnvironment.start_time_skipping() as env:
         async with Worker(
             env.client,

@@ -12,7 +12,7 @@ async def main():
 
     worker = Worker(
         client,
-        task_queue="hello-activity-task-queue",
+        task_queue="subscription",
         workflows=[SendEmailWorkflow],
         activities=[send_email],
     )

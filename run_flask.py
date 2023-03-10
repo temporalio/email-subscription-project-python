@@ -21,7 +21,7 @@ async def start_subscription():
         SendEmailWorkflow.run,
         args=(request.form["email"], request.form["message"]),
         id="send-email-activity",
-        task_queue="hello-activity-task-queue",
+        task_queue="subscription",
     )
     handle = g.client.get_workflow_handle(
         "send-email-activity",
