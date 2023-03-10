@@ -13,7 +13,7 @@ async def get_client():
     return g.client
 
 
-@app.route("/subscribe/", methods=["POST"])
+@app.route("/subscribe", methods=["POST"])
 async def start_subscription():
     await get_client()
 
@@ -33,7 +33,7 @@ async def start_subscription():
 
 
 # GET
-@app.route("/get-details/", methods=["GET"])
+@app.route("/details", methods=["GET"])
 async def get_query():
     await get_client()
     handle = g.client.get_workflow_handle(
@@ -54,7 +54,7 @@ async def get_query():
 
 
 # patch or delete
-@app.route("/unsubscribe/", methods=["DELETE"])
+@app.route("/unsubscribe", methods=["DELETE"])
 async def end_subscription():
     await get_client()
     handle = g.client.get_workflow_handle(

@@ -17,8 +17,8 @@ poetry install
 ## Run
 
 ```python
-poetry run python subscription/run_worker.py
-poetry run python subscription/run_flask.py
+poetry run python run_worker.py
+poetry run python run_flask.py
 ```
 
 ## Terminate
@@ -32,17 +32,17 @@ temporal workflow terminate --workflow-id=send-email-activity
 ### subscribe
 
 ```bash
-curl -X POST -d "email=test@example.com&message=hello" http://localhost:5000/subscribe/
+curl -X POST -d "email=test@example.com&message=hello" http://localhost:5000/subscribe
 ```
 
 ### get-details
 
 ```bash
-curl -X GET http://localhost:5000/get-details/
+curl -X GET http://localhost:5000/details
 ```
 
 ### unsubscribe
 
 ```bash
-curl -X DELETE http://localhost:5000/unsubscribe/
+curl -X DELETE http://localhost:5000/unsubscribe
 ```

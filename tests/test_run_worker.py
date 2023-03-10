@@ -7,9 +7,9 @@ from temporalio import activity
 from temporalio.testing import WorkflowEnvironment
 from temporalio.worker import Worker
 
-from subscription.activities import send_email
-from subscription.run_worker import SendEmailWorkflow
-from subscription.shared_objects import ComposeEmail
+from activities import send_email
+from run_worker import SendEmailWorkflow
+from shared_objects import ComposeEmail
 
 
 @pytest.mark.asyncio
@@ -20,7 +20,7 @@ async def test_execute_workflow():
             env.client,
             task_queue=task_queue_name,
             workflows=[SendEmailWorkflow],
-            activities=[send_email_mocked],
+            activities=[send_email],
         ):
             assert (
                 "Sending email to test@example.com with message: Here's your message!, count: 1"
