@@ -3,8 +3,9 @@
 import asyncio
 from datetime import timedelta
 
-from shared_objects import ComposeEmail
 from temporalio import workflow
+
+from shared_objects import ComposeEmail
 
 with workflow.unsafe.imports_passed_through():
     from activities import send_email

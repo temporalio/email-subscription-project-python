@@ -1,9 +1,10 @@
 # @@@SNIPSTART email-subscription-project-python-run_worker
 import asyncio
 
-from activities import send_email
 from temporalio.client import Client
 from temporalio.worker import Worker
+
+from activities import send_email
 from workflows import SendEmailWorkflow
 
 

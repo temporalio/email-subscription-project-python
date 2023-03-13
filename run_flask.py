@@ -1,8 +1,9 @@
 # @@@SNIPSTART email-subscription-project-python-run_flask
 
 from flask import Flask, g, jsonify, request
-from run_worker import SendEmailWorkflow
 from temporalio.client import Client
+
+from run_worker import SendEmailWorkflow
 
 app = Flask(__name__)
 

@@ -1,6 +1,7 @@
 # @@@SNIPSTART email-subscription-project-python-activity_function
-from shared_objects import ComposeEmail
 from temporalio import activity
+
+from shared_objects import ComposeEmail
 
 
 @activity.defn
