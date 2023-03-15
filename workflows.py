@@ -20,20 +20,23 @@ class SendEmailWorkflow:
         self._count: int = 0
 
     @workflow.run
-    async def run(self, email, message):
+    async def run(self, email: str):
         self._email = f"{email}"
-        self._message = "Here's your message!"
+        self._message = "Welcome to our Subscription Workflow!"
         self._subscribed = True
         self._count = 0
 
         while self._subscribed is True:
             self._count += 1
+            if self._count > 1:
+                self._message = "Thank you for staying subscribed!"
+
             await workflow.start_activity(
                 send_email,
                 ComposeEmail(self._email, self._message, self._count),
                 start_to_close_timeout=timedelta(seconds=10),
             )
-            await asyncio.sleep(3)
+            await asyncio.sleep(12)
 
         return ComposeEmail(self._email, self._message, self._count)
 

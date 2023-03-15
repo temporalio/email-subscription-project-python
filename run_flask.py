@@ -14,31 +14,28 @@ async def get_client():
     return g.client
 
 
-@app.route("/subscribe", methods=["POST"])
+@app.route("/subscribe", methods=["POST", "GET"])
 async def start_subscription():
     await get_client()
-
-    await g.client.start_workflow(
-        SendEmailWorkflow.run,
-        args=(request.form["email"], request.form["message"]),
-        id="send-email-activity",
-        task_queue="subscription",
-    )
-    handle = g.client.get_workflow_handle(
-        "send-email-activity",
-    )
-    emails_sent: int = await handle.query(SendEmailWorkflow.count)
-    email: str = await handle.query(SendEmailWorkflow.greeting)
-
-    return jsonify({"status": "ok", "email": email, "emails_sent": emails_sent})
+    email_id = str(request.json.get("email"))
+    if request.method == "POST":
+        await g.client.start_workflow(
+            SendEmailWorkflow.run,
+            args=(email_id,),
+            id=email_id,
+            task_queue="subscription",
+        )
+        return jsonify({"status": "ok"})
+    else:
+        return jsonify({"message": "This endpoint requires a POST request."})
 
 
-# GET
-@app.route("/details", methods=["GET"])
+@app.route("/get_details", methods=["GET"])
 async def get_query():
     await get_client()
+    email_id = str(request.json.get("email"))
     handle = g.client.get_workflow_handle(
-        "send-email-activity",
+        email_id,
     )
     count: int = await handle.query(SendEmailWorkflow.count)
     greeting: str = await handle.query(SendEmailWorkflow.greeting)
@@ -54,12 +51,12 @@ async def get_query():
     )
 
 
-# patch or delete
 @app.route("/unsubscribe", methods=["DELETE"])
 async def end_subscription():
     await get_client()
+    email_id = str(request.json.get("email"))
     handle = g.client.get_workflow_handle(
-        "send-email-activity",
+        email_id,
     )
     await handle.cancel()
     return jsonify({"status": "ok"})

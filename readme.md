@@ -24,25 +24,32 @@ poetry run python run_flask.py
 ## Terminate
 
 ```bash
-temporal workflow terminate --workflow-id=send-email-activity
+temporal workflow terminate --workflow-id=example@example.com
 ```
 
 ## Curl commands
 
 ### subscribe
 
+Use the curl command to send a POST request to `http://localhost:5000/subscribe` with the email address as a JSON payload.
+
 ```bash
-curl -X POST -d "email=test@example.com&message=hello" http://localhost:5000/subscribe
+curl -X POST -H "Content-Type: application/json" -d '{"email": "example@example.com"}' http://localhost:5000/subscribe
 ```
 
 ### get-details
 
+The email address should be included in the query string parameter of the URL.
+
 ```bash
-curl -X GET http://localhost:5000/details
+curl -X GET -H "Content-Type: application/json" -d '{"email": "example@example.com"}' http://localhost:5000/get_details
+
 ```
 
 ### unsubscribe
 
+The email address should be included in the query string parameter of the URL.
+
 ```bash
-curl -X DELETE http://localhost:5000/unsubscribe
+curl -X DELETE -H "Content-Type: application/json" -d '{"email": "example@example.com"}' http://localhost:5000/unsubscribe
 ```
