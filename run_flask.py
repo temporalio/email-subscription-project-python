@@ -9,11 +9,6 @@ from shared_objects import TaskQueueName, EmailDetails, WorkflowOptions
 
 app = Flask(__name__)
 
-#  async def get_client() -> Client:
-    #  if Client not in g:
-        #  g.client = await Client.connect("localhost:7233")
-    #  return g.client
-
 async def connect_temporal(app):
     client: Client = await Client.connect('localhost:7233')
     app.temporal_client = client
