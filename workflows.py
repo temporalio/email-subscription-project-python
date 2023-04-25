@@ -4,8 +4,9 @@ import asyncio
 from datetime import timedelta
 
 from temporalio import workflow
+from temporalio.exceptions import CancelledError
 
-from shared_objects import ComposeEmail
+from shared_objects import EmailDetails, WorkflowOptions
 
 with workflow.unsafe.imports_passed_through():
     from activities import send_email
@@ -14,43 +15,44 @@ with workflow.unsafe.imports_passed_through():
 @workflow.defn
 class SendEmailWorkflow:
     def __init__(self) -> None:
-        self._email: str = "<no email>"
-        self._message: str = "<no message>"
-        self._subscribed: bool = False
-        self._count: int = 0
+        self.email_details = EmailDetails()
 
     @workflow.run
-    async def run(self, email: str):
-        self._email = f"{email}"
-        self._message = "Welcome to our Subscription Workflow!"
-        self._subscribed = True
-        self._count = 0
+    async def run(self, data: WorkflowOptions):
+        duration = 12
+        self.email_details.email= data.email
+        self.email_details.message = "Welcome to our Subscription Workflow!"
+        self.email_details.subscribed = True
+        self.email_details.count = 0
 
-        while self._subscribed is True:
-            self._count += 1
-            if self._count > 1:
-                self._message = "Thank you for staying subscribed!"
+        while self.email_details.subscribed is True:
+            self.email_details.count += 1
+            if self.email_details.count > 1:
+                self.email_details.message = "Thank you for staying subscribed!"
 
-            await workflow.start_activity(
-                send_email,
-                ComposeEmail(self._email, self._message, self._count),
-                start_to_close_timeout=timedelta(seconds=10),
-            )
-            await asyncio.sleep(12)
+            try:
+                await workflow.start_activity(
+                    send_email,
+                    self.email_details,
+                    start_to_close_timeout=timedelta(seconds=10),
+                )
+                await asyncio.sleep(duration)
 
-        return ComposeEmail(self._email, self._message, self._count)
+            except asyncio.CancelledError as err:
+                # Cancelled by the user. Send them a goodbye message.
+                self.email_details.subscribed = False
+                self.email_details.message = "Sorry to see you go"
+                await workflow.start_activity(
+                    send_email,
+                    self.email_details,
+                    start_to_close_timeout=timedelta(seconds=10),
+                )
+                # raise error so workflow shows as cancelled.
+                raise err
+
 
     @workflow.query
-    def greeting(self) -> str:
-        return self._email
-
-    @workflow.query
-    def message(self) -> str:
-        return self._message
-
-    @workflow.query
-    def count(self) -> int:
-        return self._count
-
+    def details(self) -> EmailDetails:
+        return self.email_details
 
 # @@@SNIPEND
