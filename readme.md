@@ -42,13 +42,13 @@ curl -X POST -H "Content-Type: application/json" -d '{"email": "example@example.
 The email address should be included in the query string parameter of the URL.
 
 ```bash
-curl -X GET -H "Content-Type: application/json" -d '{"email": "example@example.com"}' http://localhost:5000/get_details
+curl -X GET -H "Content-Type: application/json" http://localhost:5000/get_details?email=example@example.com
 
 ```
 
-### unsubscribe
+### Unsubscribe
 
-The email address should be included in the query string parameter of the URL.
+Send a `DELETE` request with the email address in a JSON payload:
 
 ```bash
 curl -X DELETE -H "Content-Type: application/json" -d '{"email": "example@example.com"}' http://localhost:5000/unsubscribe
