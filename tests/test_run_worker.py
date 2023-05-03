@@ -11,11 +11,10 @@ from temporalio.client import WorkflowFailureError, WorkflowExecutionStatus
 from shared_objects import EmailDetails
 from activities import send_email
 from run_worker import SendEmailWorkflow
-#
 
 @pytest.mark.asyncio
 async def test_create_email() -> None:
-    task_queue_name: str = "subscription"
+    task_queue_name: str = "email_subscription"
 
     async with await WorkflowEnvironment.start_local() as env:
         data: EmailDetails = EmailDetails(email="test@example.com", message="Here's your message!")
