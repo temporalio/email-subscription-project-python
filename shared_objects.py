@@ -1,11 +1,13 @@
 # @@@SNIPSTART email-subscription-project-python-shared_objects
 from dataclasses import dataclass
 
-TaskQueueName: str="email_subscription"
+task_queue_name = "email_subscription"
+
 
 @dataclass
 class WorkflowOptions:
     email: str
+
 
 @dataclass
 class EmailDetails:

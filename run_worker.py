@@ -5,8 +5,8 @@ from temporalio.client import Client
 from temporalio.worker import Worker
 
 from activities import send_email
+from shared_objects import task_queue_name
 from workflows import SendEmailWorkflow
-from shared_objects import TaskQueueName
 
 
 async def main():
@@ -14,7 +14,7 @@ async def main():
 
     worker = Worker(
         client,
-        task_queue=TaskQueueName,
+        task_queue=task_queue_name,
         workflows=[SendEmailWorkflow],
         activities=[send_email],
     )

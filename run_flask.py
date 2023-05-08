@@ -1,54 +1,55 @@
 # @@@SNIPSTART email-subscription-project-python-run_flask
 
 import asyncio
-from flask import Flask, jsonify, current_app, request, make_response
+
+from flask import Flask, current_app, jsonify, make_response, request
 from temporalio.client import Client
 
 from run_worker import SendEmailWorkflow
-from shared_objects import TaskQueueName, EmailDetails, WorkflowOptions
+from shared_objects import WorkflowOptions, task_queue_name
 
 app = Flask(__name__)
 
+
 async def connect_temporal(app):
-    client: Client = await Client.connect('localhost:7233')
+    client = await Client.connect("localhost:7233")
     app.temporal_client = client
+
 
 def get_client() -> Client:
     return current_app.temporal_client
 
+
 @app.route("/subscribe", methods=["POST"])
 async def start_subscription():
-    client: Client = get_client()
-    if request.method == "POST":
-        email_id: str = str(request.json.get("email"))
-        data: WorkflowOptions = WorkflowOptions(email = email_id)
-        await client.start_workflow(
-            SendEmailWorkflow.run,
-            data,
-            id=data.email,
-            task_queue=TaskQueueName,
-        )
+    client = get_client()
 
-        message = jsonify({"message": "Resource created successfully"})
-        response = make_response(message, 201)
-        return response
+    email: str = str(request.json.get("email"))
+    data: WorkflowOptions = WorkflowOptions(email=email)
+    await client.start_workflow(
+        SendEmailWorkflow.run,
+        data,
+        id=data.email,
+        task_queue=task_queue_name,
+    )
 
-    return jsonify({"message": "This endpoint requires a POST request."})
+    message = jsonify({"message": "Resource created successfully"})
+    response = make_response(message, 201)
+    return response
 
 
 @app.route("/get_details", methods=["GET"])
 async def get_query():
-    client: Client = get_client()
-    email_id = request.args.get("email")
-    handle = client.get_workflow_handle(email_id)
+    client = get_client()
+    email = request.args.get("email")
+    handle = client.get_workflow_handle_for(SendEmailWorkflow.run, email)
     results = await handle.query(SendEmailWorkflow.details)
-
-    message =  jsonify(
+    message = jsonify(
         {
             "email": results.email,
             "message": results.message,
             "subscribed": results.subscribed,
-            "numberOfEmailsSent": results.count
+            "numberOfEmailsSent": results.count,
         }
     )
 
@@ -59,9 +60,9 @@ async def get_query():
 @app.route("/unsubscribe", methods=["DELETE"])
 async def end_subscription():
     client = get_client()
-    email_id: str = str(request.json.get("email"))
+    email: str = str(request.json.get("email"))
     handle = client.get_workflow_handle(
-        email_id,
+        email,
     )
     await handle.cancel()
     message = jsonify({"message": "Requesting cancellation"})
@@ -70,6 +71,7 @@ async def end_subscription():
     # the request but has not processed yet.
     response = make_response(message, 202)
     return response
+
 
 if __name__ == "__main__":
     # Create Temporal connection.
